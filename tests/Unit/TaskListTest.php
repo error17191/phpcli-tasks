@@ -1,7 +1,10 @@
 <?php
 
+use App\TaskList;
+use App\TaskStorage;
+use PHPUnit\Framework\TestCase;
 
-class TaskListTest extends \PHPUnit\Framework\TestCase
+class TaskListTest extends TestCase
 {
 
     public static function setUpBeforeClass()
@@ -25,7 +28,7 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
     /** @test */
     public function last_returns_null_when_no_tasks()
     {
-        $taskList = new \App\TaskList(new \App\TaskStorage($this->makeFilePath()));
+        $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
 
         $this->assertEquals(null, $taskList->last());
     }
@@ -33,7 +36,7 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
     /** @test */
     public function all_method_returns_array()
     {
-        $taskList = new \App\TaskList(new \App\TaskStorage($this->makeFilePath()));
+        $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
         $taskList->add('SomeTask');
 
         $this->assertTrue(is_array($taskList->all()));
@@ -42,7 +45,7 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
     /** @test */
     public function all_method_returns_empty_array_if_no_tasks()
     {
-        $taskList = new \App\TaskList(new \App\TaskStorage($this->makeFilePath()));
+        $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
 
         $this->assertTrue(is_array($taskList->all()));
         $this->assertCount(0, $taskList->all());
@@ -51,7 +54,7 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
     /** @test */
     public function it_can_add_a_task()
     {
-        $taskList = new \App\TaskList(new \App\TaskStorage($this->makeFilePath()));
+        $taskList = new TaskList(new \App\TaskStorage($this->makeFilePath()));
 
         $taskList->add('Bla bla bla');
         $tasks = $taskList->all();
@@ -64,7 +67,7 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
     /** @test */
     public function it_can_return_count_of_tasks()
     {
-        $taskList = new \App\TaskList(new \App\TaskStorage($this->makeFilePath()));
+        $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
 
         $this->assertEquals(0, $taskList->count());
     }
@@ -73,7 +76,7 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
 
     public function it_can_check_if_the_list_is_empty()
     {
-        $taskList = new \App\TaskList(new \App\TaskStorage($this->makeFilePath()));
+        $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
 
         $this->assertTrue($taskList->isEmpty());
     }
@@ -82,15 +85,15 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
 
     public function it_can_save_all_tasks()
     {
-        $storage = new \App\TaskStorage($this->makeFilePath());
-        $taskList = new \App\TaskList($storage);
+        $storage = new TaskStorage($this->makeFilePath());
+        $taskList = new TaskList($storage);
 
         $taskList->add('Task One');
         $taskList->add('Task Two');
 
         $this->assertTrue($taskList->save());
 
-        $newTaskList = new \App\TaskList($storage);
+        $newTaskList = new TaskList($storage);
 
         $this->assertCount(2, $newTaskList->all());
         $this->assertEquals('Task One', $newTaskList->all()[0]);
@@ -101,8 +104,8 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
 
     public function it_can_clear_all_tasks()
     {
-        $storage = new \App\TaskStorage($this->makeFilePath());
-        $taskList = new \App\TaskList($storage);
+        $storage = new TaskStorage($this->makeFilePath());
+        $taskList = new TaskList($storage);
 
         $taskList->add('one');
         $taskList->add('two');
@@ -111,14 +114,14 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
 
         $this->assertCount(0, $taskList->all());
 
-        $taskList = new \App\TaskList($storage);
+        $taskList = new TaskList($storage);
         $this->assertCount(0, $taskList->all());
     }
 
     /** @test */
     public function it_can_add_after_it_saves()
     {
-        $taskList = new \App\TaskList(new \App\TaskStorage($this->makeFilePath()));
+        $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
 
         $taskList->add('One');
         $taskList->save();
@@ -132,7 +135,7 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
     /** @test */
     public function it_can_add_after_it_clears()
     {
-        $taskList = new \App\TaskList(new \App\TaskStorage($this->makeFilePath()));
+        $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
 
         $taskList->add('One');
         $taskList->clear();
@@ -145,15 +148,15 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
     /** @test */
     public function it_can_save_after_it_clears()
     {
-        $storage = new \App\TaskStorage($this->makeFilePath());
-        $taskList = new \App\TaskList($storage);
+        $storage = new TaskStorage($this->makeFilePath());
+        $taskList = new TaskList($storage);
 
         $taskList->add('One');
         $taskList->clear();
         $taskList->add('Two');
         $taskList->save();
 
-        $taskList = new \App\TaskList($storage);
+        $taskList = new TaskList($storage);
         $this->assertCount(1, $taskList->all());
         $this->assertEquals('Two', $taskList->all()[0]);
     }
