@@ -6,18 +6,12 @@ class TaskList
 {
     protected $tasks = [];
 
-    protected $path;
+    protected $storage;
 
-    public function __construct($filePath)
+    public function __construct(TaskStorage $storage)
     {
-        if (file_exists($filePath)) {
-            $this->tasks = json_decode(file_get_contents($filePath));
-        } else {
-            file_put_contents($filePath, '[]');
-            $this->tasks = [];
-        }
-
-        $this->path = $filePath;
+        $this->storage = $storage;
+        $this->tasks = $this->storage->fetchTasks();
     }
 
     public function add(string $task)
@@ -49,8 +43,7 @@ class TaskList
 
     public function save()
     {
-        return false !== file_put_contents($this->path, json_encode($this->tasks
-                , JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        return $this->storage->store($this);
     }
 
     public function clear()
