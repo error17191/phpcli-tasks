@@ -13,7 +13,7 @@ class TaskListTest extends \PHPUnit\Framework\TestCase
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
-        
+
         foreach (glob(static::tempPath() . "*") as $filePath) {
             if (is_file($filePath)) {
                 unlink($filePath);
