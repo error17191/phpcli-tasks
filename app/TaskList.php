@@ -14,8 +14,11 @@ class TaskList
         $this->tasks = $this->storage->fetchTasks();
     }
 
-    public function add(Task $task)
+    public function add($task)
     {
+        if (is_string($task)) {
+            $task = new Task($task);
+        }
         $this->tasks[] = $task;
     }
 
