@@ -2,6 +2,7 @@
 
 use App\TaskList;
 use App\TaskStorage;
+use App\Task;
 use PHPUnit\Framework\TestCase;
 
 class TaskListTest extends TestCase
@@ -37,7 +38,7 @@ class TaskListTest extends TestCase
     public function all_method_returns_array()
     {
         $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
-        $taskList->add('SomeTask');
+        $taskList->add(new Task('SomeTask'));
 
         $this->assertTrue(is_array($taskList->all()));
     }
@@ -56,7 +57,7 @@ class TaskListTest extends TestCase
     {
         $taskList = new TaskList(new \App\TaskStorage($this->makeFilePath()));
 
-        $taskList->add('Bla bla bla');
+        $taskList->add(new Task('Bla bla bla'));
         $tasks = $taskList->all();
         $task = $taskList->last();
 
@@ -88,8 +89,8 @@ class TaskListTest extends TestCase
         $storage = new TaskStorage($this->makeFilePath());
         $taskList = new TaskList($storage);
 
-        $taskList->add('Task One');
-        $taskList->add('Task Two');
+        $taskList->add(new Task('Task One'));
+        $taskList->add(new Task('Task Two'));
 
         $this->assertTrue($taskList->save());
 
@@ -107,8 +108,8 @@ class TaskListTest extends TestCase
         $storage = new TaskStorage($this->makeFilePath());
         $taskList = new TaskList($storage);
 
-        $taskList->add('one');
-        $taskList->add('two');
+        $taskList->add(new Task('one'));
+        $taskList->add(new Task('two'));
 
         $taskList->clear();
 
@@ -123,9 +124,9 @@ class TaskListTest extends TestCase
     {
         $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
 
-        $taskList->add('One');
+        $taskList->add(new Task('One'));
         $taskList->save();
-        $taskList->add('Two');
+        $taskList->add(new Task('Two'));
 
         $this->assertCount(2, $taskList->all());
         $this->assertEquals('One', $taskList->all()[0]);
@@ -137,9 +138,9 @@ class TaskListTest extends TestCase
     {
         $taskList = new TaskList(new TaskStorage($this->makeFilePath()));
 
-        $taskList->add('One');
+        $taskList->add(new Task('One'));
         $taskList->clear();
-        $taskList->add('Two');
+        $taskList->add(new Task('Two'));
 
         $this->assertCount(1, $taskList->all());
         $this->assertEquals('Two', $taskList->all()[0]);
@@ -151,9 +152,9 @@ class TaskListTest extends TestCase
         $storage = new TaskStorage($this->makeFilePath());
         $taskList = new TaskList($storage);
 
-        $taskList->add('One');
+        $taskList->add(new Task('One'));
         $taskList->clear();
-        $taskList->add('Two');
+        $taskList->add(new Task('Two'));
         $taskList->save();
 
         $taskList = new TaskList($storage);

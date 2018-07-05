@@ -16,5 +16,8 @@ class Task
         $this->created_at = Carbon::now();
     }
 
-
+    public function __toString()
+    {
+        return $this->title;
+    }
 }

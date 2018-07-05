@@ -5,40 +5,39 @@ namespace App;
 
 class TaskStorage
 {
-    protected $json;
+    protected $encoded;
 
     protected $path;
 
     public function __construct(string $filePath)
     {
         if (file_exists($filePath)) {
-            $this->json = file_get_contents($filePath);
+            $this->encoded = file_get_contents($filePath);
         } else {
-            file_put_contents($filePath, "[]");
-            $this->json = "[]";
+            $this->encoded = serialize([]);
+            file_put_contents($filePath, $this->encoded);
         }
         $this->path = $filePath;
     }
 
     public function store(TaskList $taskList)
     {
-        $this->json = $this->encodeJson($taskList->all());
-        return false !== file_put_contents($this->path, $this->json);
+        $this->encoded = $this->encode($taskList->all());
+        return false !== file_put_contents($this->path, $this->encoded);
     }
 
     public function fetchTasks()
     {
-        return $this->decodeJson($this->json);
+        return $this->decode($this->encoded);
     }
 
-    protected function encodeJson($data)
+    protected function encode($data)
     {
-        return json_encode($data
-            , JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return serialize($data);
     }
 
-    protected function decodeJson($json)
+    protected function decode($encoded)
     {
-        return json_decode($json);
+        return unserialize($encoded);
     }
 }
